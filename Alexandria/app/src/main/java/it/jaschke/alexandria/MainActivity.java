@@ -17,6 +17,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import it.jaschke.alexandria.Fragments.About;
+import it.jaschke.alexandria.Fragments.AddBook;
+import it.jaschke.alexandria.Fragments.BookDetail;
+import it.jaschke.alexandria.Fragments.ListOfBooks;
+import it.jaschke.alexandria.Fragments.NavigationDrawerFragment;
 import it.jaschke.alexandria.api.Callback;
 
 

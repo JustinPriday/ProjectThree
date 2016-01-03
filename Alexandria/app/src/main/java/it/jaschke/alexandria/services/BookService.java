@@ -72,6 +72,10 @@ public class BookService extends IntentService {
      */
     private void fetchBook(String ean) {
 
+        if (ean == null) {
+            Log.e(LOG_TAG,"Null Book Found");
+        }
+
         if(ean.length()!=13){
             return;
         }
@@ -157,6 +161,12 @@ public class BookService extends IntentService {
         final String IMG_URL = "thumbnail";
 
         try {
+            if (bookJsonString == null) {
+                //Null bookJsonString erroneously not handled. Return on null now evades crash condition
+                //TODO:Invesitage better UI way of handling no internet connection, user should not get expectation of functionality when it is not available.
+                Log.e(LOG_TAG,"Null JSON Found");
+                return;
+            }
             JSONObject bookJson = new JSONObject(bookJsonString);
             JSONArray bookArray;
             if(bookJson.has(ITEMS)){
@@ -198,6 +208,8 @@ public class BookService extends IntentService {
 
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Error ", e);
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "Error ",e);
         }
     }
 
