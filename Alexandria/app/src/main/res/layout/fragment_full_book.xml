@@ -100,7 +100,8 @@
                     android:layout_gravity="right|top"
                     android:layout_alignParentTop="true"
                     android:layout_alignRight="@+id/fullBookTitle"
-                    android:layout_alignEnd="@+id/fullBookTitle"/>
+                    android:layout_alignEnd="@+id/fullBookTitle"
+                    android:visibility="gone"/>
 
 
             </RelativeLayout>

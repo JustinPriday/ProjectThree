@@ -6,31 +6,46 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.DrawerLayout;
+//import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import it.jaschke.alexandria.Fragments.About;
 import it.jaschke.alexandria.Fragments.AddBook;
 import it.jaschke.alexandria.Fragments.BookDetail;
 import it.jaschke.alexandria.Fragments.ListOfBooks;
-import it.jaschke.alexandria.Fragments.NavigationDrawerFragment;
+//import it.jaschke.alexandria.Fragments.NavigationDrawerFragment;
 import it.jaschke.alexandria.api.Callback;
 
 
-public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks, Callback {
+public class MainActivity extends AppCompatActivity implements Callback,ListOfBooks.FabContainer {
+// Removed NavigationDrawerFragment.NavigationDrawerCallbacks
+//
+
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
-    private NavigationDrawerFragment navigationDrawerFragment;
+//    private NavigationDrawerFragment navigationDrawerFragment;
+
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -42,6 +57,12 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
     public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
 
+    @Bind(R.id.fab)
+    FloatingActionButton addBookFab;
+
+    @Bind(R.id.toolbar)
+    Toolbar actionToolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,41 +73,62 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             setContentView(R.layout.activity_main);
         }
 
+        ButterKnife.bind(this);
+
         messageReciever = new MessageReciever();
         IntentFilter filter = new IntentFilter(MESSAGE_EVENT);
         LocalBroadcastManager.getInstance(this).registerReceiver(messageReciever,filter);
 
-        navigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+//        navigationDrawerFragment = (NavigationDrawerFragment)
+//                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         title = getTitle();
+        setSupportActionBar(actionToolbar);
 
         // Set up the drawer.
-        navigationDrawerFragment.setUp(R.id.navigation_drawer,
-                    (DrawerLayout) findViewById(R.id.drawer_layout));
-    }
-
-    @Override
-    public void onNavigationDrawerItemSelected(int position) {
+//        navigationDrawerFragment.setUp(R.id.navigation_drawer,
+//                    (DrawerLayout) findViewById(R.id.drawer_layout));
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment nextFragment;
-
-        switch (position){
-            default:
-            case 0:
-                nextFragment = new ListOfBooks();
-                break;
-            case 1:
-                nextFragment = new AddBook();
-                break;
-            case 2:
-                nextFragment = new About();
-                break;
-
-        }
-
+        nextFragment = new ListOfBooks();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, nextFragment)
+                .addToBackStack((String) title)
+                .commit();
+    }
+
+//    @Override
+//    public void onNavigationDrawerItemSelected(int position) {
+//
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        Fragment nextFragment;
+//
+//        switch (position){
+//            default:
+//            case 0:
+//                nextFragment = new ListOfBooks();
+//                break;
+//            case 1:
+//                nextFragment = new AddBook();
+//                break;
+//            case 2:
+//                nextFragment = new About();
+//                break;
+//
+//        }
+//
+//        fragmentManager.beginTransaction()
+//                .replace(R.id.container, nextFragment)
+//                .addToBackStack((String) title)
+//                .commit();
+//    }
+
+    @OnClick(R.id.fab)
+    public void onFabClick() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        addBookFab.setVisibility(View.GONE);
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, new AddBook())
                 .addToBackStack((String) title)
                 .commit();
     }
@@ -105,14 +147,17 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!navigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
-            restoreActionBar();
-            return true;
-        }
+        //Navigation Drawer is redundant when using Floating Action Bar to add books to the list.
+        //Removed accordingly.
+
+//        if (!navigationDrawerFragment.isDrawerOpen()) {
+//            // Only show items in the action bar relevant to this screen
+//            // if the drawer is not showing. Otherwise, let the drawer
+//            // decide what to show in the action bar.
+//            getMenuInflater().inflate(R.menu.main, menu);
+//            restoreActionBar();
+//            return true;
+//        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -121,11 +166,23 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
-            return true;
+        //Added Switch Statement to handle back button from Add Book Fragment.
+        switch (item.getItemId()) {
+
+            case android.R.id.home: {
+                getSupportFragmentManager().popBackStack();
+                return true;
+            }
+
+            case R.id.action_settings: {
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            }
+
+            default:
+                Log.e(LOG_TAG, "Unknown menu item selected");
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -149,11 +206,20 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         if(findViewById(R.id.right_container) != null){
             id = R.id.right_container;
         }
+
+        addBookFab.setVisibility(View.GONE);
+
         getSupportFragmentManager().beginTransaction()
                 .replace(id, fragment)
                 .addToBackStack("Book Detail")
                 .commit();
 
+
+    }
+
+    @Override
+    public void showFab(Boolean toShow) {
+        addBookFab.setVisibility((toShow)?View.VISIBLE:View.GONE);
     }
 
     private class MessageReciever extends BroadcastReceiver {
@@ -182,6 +248,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         }
         super.onBackPressed();
     }
+
+
 
 
 }

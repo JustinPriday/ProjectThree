@@ -7,13 +7,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.api.BookListAdapter;
 import it.jaschke.alexandria.api.Callback;
@@ -22,6 +28,8 @@ import it.jaschke.alexandria.data.AlexandriaContract;
 
 public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final String LOG_TAG = ListOfBooks.class.getSimpleName();
+
     private BookListAdapter bookListAdapter;
     private ListView bookList;
     private int position = ListView.INVALID_POSITION;
@@ -29,12 +37,27 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
 
     private final int LOADER_ID = 10;
 
+    @Bind(R.id.noBooksText)
+    TextView noBooksText;
+
+    public interface FabContainer {
+        public void showFab(Boolean toShow);
+    }
+
     public ListOfBooks() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity() instanceof ListOfBooks.FabContainer) {
+            ((FabContainer) getActivity()).showFab(true);
+        }
     }
 
     @Override
@@ -48,9 +71,17 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
                 null  // sort order
         );
 
+        ActionBar aBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (aBar != null) {
+            aBar.setDisplayHomeAsUpEnabled(false);
+            aBar.setDisplayShowHomeEnabled(false);
+            aBar.setTitle(getResources().getString(R.string.books));
+        }
+        setHasOptionsMenu(false);
 
         bookListAdapter = new BookListAdapter(getActivity(), cursor, 0);
         View rootView = inflater.inflate(R.layout.fragment_list_of_books, container, false);
+        ButterKnife.bind(this,rootView);
         searchText = (EditText) rootView.findViewById(R.id.searchText);
         rootView.findViewById(R.id.searchButton).setOnClickListener(
                 new View.OnClickListener() {
@@ -60,6 +91,10 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
                     }
                 }
         );
+
+        if(cursor.moveToFirst()) {
+            noBooksText.setVisibility(View.GONE);
+        }
 
         bookList = (ListView) rootView.findViewById(R.id.listOfBooks);
         bookList.setAdapter(bookListAdapter);
@@ -113,9 +148,18 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if(data.moveToFirst()) {
+            noBooksText.setVisibility(View.GONE);
+        } else {
+            noBooksText.setVisibility(View.VISIBLE);
+        }
+
         bookListAdapter.swapCursor(data);
         if (position != ListView.INVALID_POSITION) {
             bookList.smoothScrollToPosition(position);
+        }
+        if (bookListAdapter.getCount() == 0) {
+            Log.v(LOG_TAG, "No Book Items");
         }
     }
 

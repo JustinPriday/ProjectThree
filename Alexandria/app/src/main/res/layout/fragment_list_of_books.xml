@@ -1,6 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context=".Fragments.ListOfBooks">
+    android:layout_height="match_parent"
+    tools:context=".Fragments.ListOfBooks">
 
     <RelativeLayout
         android:orientation="vertical"
@@ -44,6 +45,13 @@
                   android:layout_alignParentRight="true"
                   android:layout_alignParentStart="true"
                   android:layout_toRightOf="@id/searchButton"/>
+
+        <TextView
+            android:id="@+id/noBooksText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/no_books_message"
+            android:gravity="center" />
 
 
 

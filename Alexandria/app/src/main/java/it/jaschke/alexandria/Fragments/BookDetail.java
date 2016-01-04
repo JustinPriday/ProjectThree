@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -52,6 +54,14 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
             ean = arguments.getString(BookDetail.EAN_KEY);
             getLoaderManager().restartLoader(LOADER_ID, null, this);
         }
+
+        ActionBar aBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (aBar != null) {
+            aBar.setDisplayHomeAsUpEnabled(true);
+            aBar.setDisplayShowHomeEnabled(true);
+        }
+        setHasOptionsMenu(true);
+
 
         rootView = inflater.inflate(R.layout.fragment_full_book, container, false);
         rootView.findViewById(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
