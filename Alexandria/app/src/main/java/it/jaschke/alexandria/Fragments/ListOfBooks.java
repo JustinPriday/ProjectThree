@@ -1,6 +1,7 @@
 package it.jaschke.alexandria.Fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,8 +12,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -20,6 +25,7 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import it.jaschke.alexandria.Activity.MainActivity;
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.api.BookListAdapter;
 import it.jaschke.alexandria.api.Callback;
@@ -47,6 +53,17 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
     public ListOfBooks() {
     }
 
+    private void hideSoftKeyBoard() {
+        //Keyboard not being hidden when moving from book list search. Keyboard is blocking functionality on
+        //subsequent views. Accordingly this keyboard hider is called from onPause to allow views to be used
+        //without keyboard present.
+        View v = getActivity().getWindow().getCurrentFocus();
+        if (v != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +75,14 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
         if (getActivity() instanceof ListOfBooks.FabContainer) {
             ((FabContainer) getActivity()).showFab(true);
         }
+        restartLoader();
+        //Refresh of changing book list was inconsistent. Loader restart added to ensure up to date list.
+    }
+
+    @Override
+    public void onPause() {
+        hideSoftKeyBoard();
+        super.onPause();
     }
 
     @Override
@@ -77,7 +102,7 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
             aBar.setDisplayShowHomeEnabled(false);
             aBar.setTitle(getResources().getString(R.string.books));
         }
-        setHasOptionsMenu(false);
+        setHasOptionsMenu(true);
 
         bookListAdapter = new BookListAdapter(getActivity(), cursor, 0);
         View rootView = inflater.inflate(R.layout.fragment_list_of_books, container, false);
@@ -119,8 +144,13 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.main, menu);
+    }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         final String selection = AlexandriaContract.BookEntry.TITLE +" LIKE ? OR " + AlexandriaContract.BookEntry.SUBTITLE + " LIKE ? ";
         String searchString =searchText.getText().toString();
 

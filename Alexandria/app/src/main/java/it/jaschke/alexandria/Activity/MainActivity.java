@@ -1,4 +1,4 @@
-package it.jaschke.alexandria;
+package it.jaschke.alexandria.Activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,22 +7,20 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 //import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
-
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,6 +30,7 @@ import it.jaschke.alexandria.Fragments.AddBook;
 import it.jaschke.alexandria.Fragments.BookDetail;
 import it.jaschke.alexandria.Fragments.ListOfBooks;
 //import it.jaschke.alexandria.Fragments.NavigationDrawerFragment;
+import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.api.Callback;
 
 
@@ -56,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements Callback,ListOfBo
 
     public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
     public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
+
+    private static final String STATE_CURRENT_FRAGMENT = "current_fragment_position";
 
     @Bind(R.id.fab)
     FloatingActionButton addBookFab;
@@ -95,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements Callback,ListOfBo
                 .replace(R.id.container, nextFragment)
                 .addToBackStack((String) title)
                 .commit();
+
     }
 
 //    @Override
@@ -125,12 +127,15 @@ public class MainActivity extends AppCompatActivity implements Callback,ListOfBo
 
     @OnClick(R.id.fab)
     public void onFabClick() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        addBookFab.setVisibility(View.GONE);
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, new AddBook())
-                .addToBackStack((String) title)
-                .commit();
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        addBookFab.setVisibility(View.GONE);
+//        fragmentManager.beginTransaction()
+//                .replace(R.id.container, new AddBook())
+//                .addToBackStack((String) title)
+//                .commit();
+
+        Intent addBookIntent = new Intent(this, AddBookActivity.class);
+        ActivityCompat.startActivity(this, addBookIntent, null);
     }
 
     public void setTitle(int titleId) {
@@ -144,20 +149,13 @@ public class MainActivity extends AppCompatActivity implements Callback,ListOfBo
         actionBar.setTitle(title);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //Navigation Drawer is redundant when using Floating Action Bar to add books to the list.
-        //Removed accordingly.
-
-//        if (!navigationDrawerFragment.isDrawerOpen()) {
-//            // Only show items in the action bar relevant to this screen
-//            // if the drawer is not showing. Otherwise, let the drawer
-//            // decide what to show in the action bar.
-//            getMenuInflater().inflate(R.menu.main, menu);
-//            restoreActionBar();
-//            return true;
-//        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -175,8 +173,15 @@ public class MainActivity extends AppCompatActivity implements Callback,ListOfBo
                 return true;
             }
 
-            case R.id.action_settings: {
-                startActivity(new Intent(this, SettingsActivity.class));
+            case R.id.action_about: {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                Fragment nextFragment;
+                nextFragment = new About();
+                addBookFab.setVisibility(View.GONE);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, nextFragment)
+                        .addToBackStack((String) title)
+                        .commit();
                 return true;
             }
 

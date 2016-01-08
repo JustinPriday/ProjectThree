@@ -24,7 +24,8 @@
             android:layout_marginTop="30dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
+            android:layout_alignParentStart="true"
+            android:visibility="gone"/>
 
         <Button
             android:layout_width="wrap_content"
@@ -35,7 +36,8 @@
             android:layout_marginStart="23dp"
             android:layout_alignBottom="@+id/ean"
             android:layout_toRightOf="@+id/ean"
-            android:layout_toEndOf="@+id/ean"/>
+            android:layout_toEndOf="@+id/ean"
+            android:visibility="gone"/>
 
         <TextView
             android:layout_width="wrap_content"

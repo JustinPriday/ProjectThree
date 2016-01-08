@@ -23,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import android.support.v7.widget.Toolbar;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import it.jaschke.alexandria.Activity.MainActivity;
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.AlexandriaContract;
 import it.jaschke.alexandria.services.BookService;
@@ -42,7 +44,7 @@ import it.jaschke.alexandria.utilities.FragmentIntentIntegrator;
 public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,SearchView.OnQueryTextListener {
     private static final String LOG_TAG = AddBook.class.getSimpleName();
     private static final String TAG = "INTENT_TO_SCAN_ACTIVITY";
-    private EditText ean;
+    private String eanString;
     private final int LOADER_ID = 1;
     private View rootView;
     private final String EAN_CONTENT="eanContent";
@@ -59,12 +61,34 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     public AddBook(){
     }
 
+    private void hideSoftKeyBoard() {
+        View v = getActivity().getWindow().getCurrentFocus();
+        if (v != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+    }
+
+    private void startBookService(String ean) {
+        Intent bookIntent = new Intent(getActivity(), BookService.class);
+        bookIntent.putExtra(BookService.EAN, ean);
+        bookIntent.setAction(BookService.FETCH_BOOK);
+        getActivity().startService(bookIntent);
+        eanString = ean;
+        AddBook.this.restartLoader();
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(ean!=null) {
-            outState.putString(EAN_CONTENT, ean.getText().toString());
+        if(eanString!=null) {
+            outState.putString(EAN_CONTENT, eanString);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -127,7 +151,6 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_add_book, container, false);
-        ean = (EditText) rootView.findViewById(R.id.ean);
 
         ActionBar aBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (aBar != null) {
@@ -137,36 +160,32 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         }
         setHasOptionsMenu(true);
 
-        ean.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //no need
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //no need
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String ean =s.toString();
-                //catch isbn10 numbers
-                if(ean.length()==10 && !ean.startsWith("978")){
-                    ean="978"+ean;
-                }
-                if(ean.length()<13){
-                    clearFields();
-                    return;
-                }
-                //Once we have an ISBN, start a book intent
-                Intent bookIntent = new Intent(getActivity(), BookService.class);
-                bookIntent.putExtra(BookService.EAN, ean);
-                bookIntent.setAction(BookService.FETCH_BOOK);
-                getActivity().startService(bookIntent);
-                AddBook.this.restartLoader();
-            }
-        });
+//        ean.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//                //no need
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                //no need
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                String ean =s.toString();
+//                //catch isbn10 numbers
+//                if(ean.length()==10 && !ean.startsWith("978")){
+//                    ean="978"+ean;
+//                }
+//                if(ean.length()<13){
+//                    clearFields();
+//                    return;
+//                }
+//                //Once we have an ISBN, start a book intent
+//                startBookService(ean);
+//            }
+//        });
 
         rootView.findViewById(R.id.scan_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,24 +209,26 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         rootView.findViewById(R.id.save_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ean.setText("");
+//                ean.setText("");
+
             }
         });
 
         rootView.findViewById(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent bookIntent = new Intent(getActivity(), BookService.class);
-                bookIntent.putExtra(BookService.EAN, ean.getText().toString());
-                bookIntent.setAction(BookService.DELETE_BOOK);
-                getActivity().startService(bookIntent);
-                ean.setText("");
+//                Intent bookIntent = new Intent(getActivity(), BookService.class);
+//                bookIntent.putExtra(BookService.EAN, ean.getText().toString());
+//                bookIntent.setAction(BookService.DELETE_BOOK);
+//                getActivity().startService(bookIntent);
+//                ean.setText("");
             }
         });
 
         if(savedInstanceState!=null){
-            ean.setText(savedInstanceState.getString(EAN_CONTENT));
-            ean.setHint("");
+//            ean.setText(savedInstanceState.getString(EAN_CONTENT));
+            eanString = savedInstanceState.getString(EAN_CONTENT);
+//            ean.setHint("");
         }
 
         return rootView;
@@ -221,16 +242,15 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
     @Override
     public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if(ean.getText().length()==0){
+        if(eanString.length()==0){
             return null;
         }
-        String eanStr= ean.getText().toString();
-        if(eanStr.length()==10 && !eanStr.startsWith("978")){
-            eanStr="978"+eanStr;
+        if(eanString.length()==10 && !eanString.startsWith("978")){
+            eanString="978"+eanString;
         }
         return new CursorLoader(
                 getActivity(),
-                AlexandriaContract.BookEntry.buildFullBookUri(Long.parseLong(eanStr)),
+                AlexandriaContract.BookEntry.buildFullBookUri(Long.parseLong(eanString)),
                 null,
                 null,
                 null,
@@ -265,11 +285,11 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
         rootView.findViewById(R.id.save_button).setVisibility(View.VISIBLE);
         rootView.findViewById(R.id.delete_button).setVisibility(View.VISIBLE);
+        hideSoftKeyBoard();
     }
 
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
-
     }
 
     private void clearFields(){
@@ -308,11 +328,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
             return false;
         }
         //Once we have an ISBN, start a book intent
-        Intent bookIntent = new Intent(getActivity(), BookService.class);
-        bookIntent.putExtra(BookService.EAN, ean);
-        bookIntent.setAction(BookService.FETCH_BOOK);
-        getActivity().startService(bookIntent);
-        AddBook.this.restartLoader();
+        startBookService(ean);
 
         return false;
     }
@@ -324,23 +340,19 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         if (scanResult != null) {
             String mTextSearch = scanResult.getContents();
             String ean = scanResult.getContents();
-            //catch isbn10 numbers
-            if(ean.length()==10 && !ean.startsWith("978")){
-                ean="978"+ean;
+            //catch a null scan, example back pressed on scan to cancel.
+            if (ean != null) {
+                //catch isbn10 numbers
+                if (ean.length() == 10 && !ean.startsWith("978")) {
+                    ean = "978" + ean;
+                }
+                if (ean.length() < 13) {
+                    clearFields();
+                    return;
+                }
+                //Once we have an ISBN, start a book intent
+                startBookService(ean);
             }
-            if(ean.length()<13){
-                clearFields();
-                return;
-            }
-            //Once we have an ISBN, start a book intent
-            Intent bookIntent = new Intent(getActivity(), BookService.class);
-            bookIntent.putExtra(BookService.EAN, ean);
-            bookIntent.setAction(BookService.FETCH_BOOK);
-            getActivity().startService(bookIntent);
-            AddBook.this.restartLoader();
-
-//            startSearchService(mTextSearch);
-            Log.d(LOG_TAG, "onActivityResult() called with: EAN found: " + mTextSearch);
         }
     }
 }
