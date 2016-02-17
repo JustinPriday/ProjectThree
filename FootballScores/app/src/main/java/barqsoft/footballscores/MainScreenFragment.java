@@ -7,11 +7,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import barqsoft.footballscores.service.myFetchService;
 
@@ -20,10 +24,12 @@ import barqsoft.footballscores.service.myFetchService;
  */
 public class MainScreenFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
+    private static final String LOG_TAG = MainScreenFragment.class.getSimpleName();
     public scoresAdapter mAdapter;
     public static final int SCORES_LOADER = 0;
     private String[] fragmentdate = new String[1];
     private int last_selected_item = -1;
+    private TextView noMatchText;
 
     public MainScreenFragment()
     {
@@ -43,6 +49,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
                              final Bundle savedInstanceState) {
         update_scores();
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        noMatchText = (TextView) rootView.findViewById(R.id.no_matches_prompt);
         final ListView score_list = (ListView) rootView.findViewById(R.id.scores_list);
         mAdapter = new scoresAdapter(getActivity(),null,0);
         score_list.setAdapter(mAdapter);
@@ -89,8 +96,11 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
             i++;
             cursor.moveToNext();
         }
-        //Log.v(FetchScoreTask.LOG_TAG,"Loader query: " + String.valueOf(i));
+        Log.v(LOG_TAG, "Loader query: " + String.valueOf(i));
         mAdapter.swapCursor(cursor);
+
+        noMatchText.setVisibility((i>0)?View.GONE:View.VISIBLE);
+
         //mAdapter.notifyDataSetChanged();
     }
 

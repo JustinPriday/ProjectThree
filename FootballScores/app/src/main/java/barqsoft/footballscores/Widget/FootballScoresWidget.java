@@ -1,24 +1,22 @@
-package layout;
+package barqsoft.footballscores.Widget;
 
-import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.util.Log;
 import android.widget.RemoteViews;
+import android.widget.RemoteViewsService;
 
 import barqsoft.footballscores.DatabaseContract;
 import barqsoft.footballscores.MainActivity;
 import barqsoft.footballscores.R;
+import barqsoft.footballscores.ScoresProvider;
 import barqsoft.footballscores.Utilies;
-import barqsoft.footballscores.service.myFetchService;
 
 /**
  * Implementation of App Widget functionality.
@@ -29,36 +27,18 @@ public class FootballScoresWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        Intent intent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context,0,intent,0);
+        Intent intent = new Intent(context, WidgetService.class);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        intent.setData(Uri.parse((intent.toUri(Intent.URI_INTENT_SCHEME))));
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), 0);
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.football_scores_widget);
-//        views.setTextViewText(R.id.appwidget_text, widgetText);
+        views.setRemoteAdapter(R.id.fixtures_list, intent);
+        views.setEmptyView(R.id.fixtures_list, R.id.empty_view);
+
         views.setOnClickPendingIntent(R.id.launch_app_button, pendingIntent);
-
-        ContentResolver resolver = context.getContentResolver();
-
-        Uri allScoresUri = DatabaseContract.BASE_CONTENT_URI;
-
-        String todayDate = Utilies.getDateToday();
-        String todayRequest = DatabaseContract.scores_table.DATE_COL+"=?";
-
-        Cursor data = resolver.query(allScoresUri,null,todayRequest,new String[]{todayDate},null);
-
-        if ((data == null) || (!data.moveToFirst())) {
-            Log.d(LOG_TAG,"No Data in Cursor from updateAppWidget");
-        } else {
-            int dataCount = data.getCount();
-            Log.d(LOG_TAG,"Got "+dataCount+" items in Cursor");
-            while (!data.isAfterLast()) {
-                String fetchedDate = data.getString(data.getColumnIndex(DatabaseContract.scores_table.DATE_COL));
-                Log.d(LOG_TAG,"Got Time "+fetchedDate);
-                data.moveToNext();
-            }
-        }
-
-        views.setTextViewText(R.id.test_text_widget, "Did Update");
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

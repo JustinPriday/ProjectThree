@@ -1,43 +1,71 @@
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/widget_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
+    android:orientation="vertical"
     android:padding="@dimen/widget_margin">
 
-    <ListView
-        android:id="@+id/fixtures_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </ListView>
-
-    <TextView
-        android:id="@+id/empty_view"
+    <LinearLayout
+        android:id="@+id/widget_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/widget_no_fixtures"
-        android:textSize="18sp"
-        android:layout_margin="8dp"
-        android:textColor="#111111"
-        android:background="#ffffff"
-        android:contentDescription="@string/widget_no_fixtures"
-        android:visibility="invisible"/>
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/test_text_widget"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textColor="@android:color/black"
-        android:gravity="center"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:layout_weight="0"
+            android:background="#333333">
 
-    <Button
-        android:id="@+id/launch_app_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="launch app"
-        android:gravity="bottom"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/widget_header_text"
+                android:textColor="@android:color/white"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="16dp"
+                android:textSize="24sp"/>
 
-</FrameLayout>
+            <ImageButton
+                android:id="@+id/launch_app_button"
+                android:layout_width="62dp"
+                android:layout_height="62dp"
+                android:text=""
+                android:src="@drawable/ic_launcher"
+                android:scaleType="fitCenter"
+                android:layout_gravity="right"
+                android:padding="6dp"
+                android:background="#00000000"
+                android:contentDescription="Application Icon that launches Application when clicked" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+            <ListView
+                android:id="@+id/fixtures_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </ListView>
+            <TextView
+                android:id="@+id/empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/widget_no_fixtures"
+                android:textSize="18sp"
+                android:layout_margin="8dp"
+                android:textColor="#111111"
+                android:background="#ffffff"
+                android:contentDescription="@string/widget_no_fixtures"
+                android:visibility="visible"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

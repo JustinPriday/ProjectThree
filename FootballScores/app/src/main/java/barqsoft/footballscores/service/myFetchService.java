@@ -25,7 +25,7 @@ import java.util.Vector;
 
 import barqsoft.footballscores.DatabaseContract;
 import barqsoft.footballscores.R;
-import layout.FootballScoresWidget;
+import barqsoft.footballscores.Widget.FootballScoresWidget;
 
 /**
  * Created by yehya khaled on 3/2/2015.
