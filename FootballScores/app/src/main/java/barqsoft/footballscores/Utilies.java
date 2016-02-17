@@ -8,11 +8,30 @@ import java.util.Date;
  */
 public class Utilies
 {
+    //Old League IDs still in getLeague. Updated for 2015 Season.
     public static final int SERIE_A = 357;
     public static final int PREMIER_LEGAUE = 354;
     public static final int CHAMPIONS_LEAGUE = 362;
     public static final int PRIMERA_DIVISION = 358;
     public static final int BUNDESLIGA = 351;
+
+    public static final int BUNDESLIGA1_2015 = 394;
+    public static final int BUNDESLIGA2_2015 = 395;
+    public static final int LIGUE1_2015 = 396;
+    public static final int LIGUE2_2015 = 397;
+    public static final int PREMIER_LEAGUE_2015 = 398;
+    public static final int PRIMERA_DIVISION_2015 = 399;
+    public static final int SEGUNDA_DIVISION_2015 = 400;
+    public static final int SERIE_A_2015 = 401;
+    public static final int PRIMERA_LIGA_2015 = 402;
+    public static final int BUNDESLIGA3_2015 = 403;
+    public static final int EREDIVISIE_2015 = 404;
+    public static final int CHAMPIONS_LEAGUE_2015 = 405;
+    public static final int LEAGUE_ONE_2015 = 425;
+
+
+
+
     public static String getLeague(int league_num)
     {
         switch (league_num)
@@ -22,12 +41,29 @@ public class Utilies
             case CHAMPIONS_LEAGUE : return "UEFA Champions League";
             case PRIMERA_DIVISION : return "Primera Division";
             case BUNDESLIGA : return "Bundesliga";
+
+            case BUNDESLIGA1_2015 : return "1. Bundesliga 2015/16";
+            case BUNDESLIGA2_2015 : return "2. Bundesliga 2015/16";
+            case LIGUE1_2015 : return "Ligue 1 2015/16";
+            case LIGUE2_2015 : return "Ligue 2 2015/16";
+            case PREMIER_LEAGUE_2015 : return "Premier League 2015/16";
+            case PRIMERA_DIVISION_2015 : return "Primera Division 2015/16";
+            case SEGUNDA_DIVISION_2015 : return "Segunda Division 2015/16";
+            case SERIE_A_2015 : return "Serie A 2015/16";
+            case PRIMERA_LIGA_2015 : return "Primeira Liga 2015/16";
+            case BUNDESLIGA3_2015 : return "3. Bundesliga 2015/16";
+            case EREDIVISIE_2015 : return "Eredivisie 2015/16";
+            case CHAMPIONS_LEAGUE_2015 : return "Champions League 2015/16";
+            case LEAGUE_ONE_2015 : return "League One 2015/16";
+
+
             default: return "Not known League Please report";
+
         }
     }
     public static String getMatchDay(int match_day,int league_num)
     {
-        if(league_num == CHAMPIONS_LEAGUE)
+        if((league_num == CHAMPIONS_LEAGUE) || (league_num == CHAMPIONS_LEAGUE_2015))
         {
             if (match_day <= 6)
             {
