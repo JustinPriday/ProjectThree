@@ -19,7 +19,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:contentDescription="Home Team's Icon"
+                android:contentDescription="@string/home_logo_contentdescription"
                 android:src="@drawable/ic_launcher"/>
         </FrameLayout>
 
@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:contentDescription="Home Team's Icon"
+                android:contentDescription="@string/away_logo_contentdescription"
                 android:src="@drawable/ic_launcher"/>
         </FrameLayout>
 

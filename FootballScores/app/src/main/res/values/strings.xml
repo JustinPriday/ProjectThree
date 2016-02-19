@@ -6,11 +6,27 @@
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="tomorrow">Tomorrow</string>
+
     <string name="champions_league">UEFA Champions League</string>
     <string name="bundesliga">Bundesliga</string>
     <string name="premierleague">Premier League</string>
     <string name="primeradivison">Primera Division</string>
     <string name="seriaa">Serie A</string>
+
+    <string name="bundesliga1_2015">1. Bundesliga 2015/16</string>
+    <string name="bundesliga2_2015">2. Bundesliga 2015/16</string>
+    <string name="ligue1_2015">Ligue 1 2015/16</string>
+    <string name="ligue2_2015">Ligue 2 2015/16</string>
+    <string name="premier_league_2015">Premier League 2015/16</string>
+    <string name="primera_divison_2015">Primera Division 2015/16</string>
+    <string name="segunda_division_2015">Segunda Division 2015/16</string>
+    <string name="serie_a_2015">Serie A 2015/16</string>
+    <string name="primera_liga_2015">Primeira Liga 2015/16</string>
+    <string name="bundesliga3_2015">3. Bundesliga 2015/16</string>
+    <string name="eredivisie_2015">Eredivisie 2015/16</string>
+    <string name="champions_league_2015">Champions League 2015/16</string>
+    <string name="league_one_2015">League One 2015/16</string>
+
     <string name="matchday_text">Match day</string>
     <string name="group_stage_text">Group stages</string>
     <string name="first_knockout_round">First knockout round</string>
@@ -29,7 +45,7 @@
         This Application gets Football Match Scores for the Premier League,Seria A,Bundesliga,Primera Division
         and the Uefa Champions League.\n
         All Matches data are acquired from the football-data.org free API.\n
-        All team Logos are acquired from http://hdlogo.wordpress.com/ upon requesting permission form the owner.\n
+        All team Logos are acquired from http://hdlogo.wordpress.com/ upon requesting permission from the owner.\n
         The original version of this app was created by Yahia Khalid Ibn El Walid Ahmed, and a modified version is
         given to students in the Udacity Android Nanodegree program.\n
         To report any bugs,or suggestions do not hesitate to send a mail to y.k.ibnelwalid@gmail.com.\n\n
@@ -46,4 +62,9 @@
     <string name="widget_header_text">Football Scores</string>
 
     <string name="widget_no_fixtures">There are no fixtures for today.</string>
+    <string name="widget_no_fixtures_description">There are no fixtures for today.</string>
+
+    <string name="home_logo_contentdescription">Home Team\'s Icon</string>
+    <string name="away_logo_contentdescription">Away Team\'s Icon</string>
+    <string name="launch_logo_contentdescription">Application Icon that launches Application when clicked</string>
 </resources>

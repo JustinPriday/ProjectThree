@@ -55,6 +55,8 @@ public class scoresAdapter extends CursorAdapter
         mHolder.away_crest.setImageResource(Utilies.getTeamCrestByTeamName(
                 cursor.getString(COL_AWAY)
         ));
+        final String matchDate = cursor.getString(COL_DATE);  //Stored for sharing Date.
+        final String leagueTitle = Utilies.getLeague(context, cursor.getInt(COL_LEAGUE));
         //Log.v(FetchScoreTask.LOG_TAG,mHolder.home_name.getText() + " Vs. " + mHolder.away_name.getText() +" id " + String.valueOf(mHolder.match_id));
         //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(detail_match_id));
         LayoutInflater vi = (LayoutInflater) context.getApplicationContext()
@@ -71,15 +73,17 @@ public class scoresAdapter extends CursorAdapter
             match_day.setText(Utilies.getMatchDay(cursor.getInt(COL_MATCHDAY),
                     cursor.getInt(COL_LEAGUE)));
             TextView league = (TextView) v.findViewById(R.id.league_textview);
-            league.setText(Utilies.getLeague(cursor.getInt(COL_LEAGUE)));
+            league.setText(Utilies.getLeague(context, cursor.getInt(COL_LEAGUE)));
             Button share_button = (Button) v.findViewById(R.id.share_button);
             share_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v)
                 {
                     //add Share Action
+                    //very little information shared, further information added
                     context.startActivity(createShareForecastIntent(mHolder.home_name.getText()+" "
-                    +mHolder.score.getText()+" "+mHolder.away_name.getText() + " "));
+                            +mHolder.score.getText()+" "+mHolder.away_name.getText() + "\n" + leagueTitle + "\n" + matchDate + "  "
+                            + mHolder.date.getText() + "\n"));
                 }
             });
         }
@@ -91,7 +95,7 @@ public class scoresAdapter extends CursorAdapter
     }
     public Intent createShareForecastIntent(String ShareText) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT); //replaced deprecated FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, ShareText + FOOTBALL_SCORES_HASHTAG);
         return shareIntent;

@@ -1,5 +1,7 @@
 package barqsoft.footballscores;
 
+import android.content.Context;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -30,33 +32,32 @@ public class Utilies
     public static final int CHAMPIONS_LEAGUE_2015 = 405;
     public static final int LEAGUE_ONE_2015 = 425;
 
-
-
-
-    public static String getLeague(int league_num)
+    public static String getLeague(Context context, int league_num)
     {
         switch (league_num)
         {
-            case SERIE_A : return "Seria A";
-            case PREMIER_LEGAUE : return "Premier League";
-            case CHAMPIONS_LEAGUE : return "UEFA Champions League";
-            case PRIMERA_DIVISION : return "Primera Division";
-            case BUNDESLIGA : return "Bundesliga";
+            //Not correctly returning translatable string resources.
+            //Updated to display @string values
+            //Context now required to fetch resources
+            case SERIE_A : return  context.getResources().getString(R.string.seriaa);
+            case PREMIER_LEGAUE : return context.getResources().getString(R.string.premierleague);
+            case CHAMPIONS_LEAGUE : return context.getResources().getString(R.string.champions_league);
+            case PRIMERA_DIVISION : return context.getResources().getString(R.string.primeradivison);
+            case BUNDESLIGA : return context.getResources().getString(R.string.bundesliga);
 
-            case BUNDESLIGA1_2015 : return "1. Bundesliga 2015/16";
-            case BUNDESLIGA2_2015 : return "2. Bundesliga 2015/16";
-            case LIGUE1_2015 : return "Ligue 1 2015/16";
-            case LIGUE2_2015 : return "Ligue 2 2015/16";
-            case PREMIER_LEAGUE_2015 : return "Premier League 2015/16";
-            case PRIMERA_DIVISION_2015 : return "Primera Division 2015/16";
-            case SEGUNDA_DIVISION_2015 : return "Segunda Division 2015/16";
-            case SERIE_A_2015 : return "Serie A 2015/16";
-            case PRIMERA_LIGA_2015 : return "Primeira Liga 2015/16";
-            case BUNDESLIGA3_2015 : return "3. Bundesliga 2015/16";
-            case EREDIVISIE_2015 : return "Eredivisie 2015/16";
-            case CHAMPIONS_LEAGUE_2015 : return "Champions League 2015/16";
-            case LEAGUE_ONE_2015 : return "League One 2015/16";
-
+            case BUNDESLIGA1_2015 : return context.getResources().getString(R.string.bundesliga1_2015);
+            case BUNDESLIGA2_2015 : return context.getResources().getString(R.string.bundesliga2_2015);
+            case LIGUE1_2015 : return context.getResources().getString(R.string.ligue1_2015);
+            case LIGUE2_2015 : return context.getResources().getString(R.string.ligue2_2015);
+            case PREMIER_LEAGUE_2015 : return context.getResources().getString(R.string.premier_league_2015);
+            case PRIMERA_DIVISION_2015 : return context.getResources().getString(R.string.primera_divison_2015);
+            case SEGUNDA_DIVISION_2015 : return context.getResources().getString(R.string.segunda_division_2015);
+            case SERIE_A_2015 : return context.getResources().getString(R.string.serie_a_2015);
+            case PRIMERA_LIGA_2015 : return context.getResources().getString(R.string.primera_divison_2015);
+            case BUNDESLIGA3_2015 : return context.getResources().getString(R.string.bundesliga3_2015);
+            case EREDIVISIE_2015 : return context.getResources().getString(R.string.eredivisie_2015);
+            case CHAMPIONS_LEAGUE_2015 : return context.getResources().getString(R.string.champions_league_2015);
+            case LEAGUE_ONE_2015 : context.getResources().getString(R.string.league_one_2015);
 
             default: return "Not known League Please report";
 

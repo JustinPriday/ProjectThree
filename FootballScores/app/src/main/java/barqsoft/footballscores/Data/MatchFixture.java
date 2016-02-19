@@ -1,7 +1,6 @@
 package barqsoft.footballscores.Data;
 
 import android.database.Cursor;
-import android.util.Log;
 
 import barqsoft.footballscores.DatabaseContract;
 

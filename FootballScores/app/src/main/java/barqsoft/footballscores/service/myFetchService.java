@@ -44,8 +44,6 @@ public class myFetchService extends IntentService
     {
         getData("n2");
         getData("p2");
-
-        return;
     }
 
     private void getData (String timeFrame)

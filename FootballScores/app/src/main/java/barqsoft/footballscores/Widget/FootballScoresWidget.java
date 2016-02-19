@@ -3,20 +3,13 @@ package barqsoft.footballscores.Widget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.RemoteViewsService;
 
-import barqsoft.footballscores.DatabaseContract;
 import barqsoft.footballscores.MainActivity;
 import barqsoft.footballscores.R;
-import barqsoft.footballscores.ScoresProvider;
-import barqsoft.footballscores.Utilies;
 
 /**
  * Implementation of App Widget functionality.

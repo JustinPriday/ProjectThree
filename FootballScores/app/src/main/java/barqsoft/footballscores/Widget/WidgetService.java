@@ -1,12 +1,10 @@
 package barqsoft.footballscores.Widget;
 
-import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Build;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -16,7 +14,6 @@ import java.util.ArrayList;
 import barqsoft.footballscores.Data.MatchFixture;
 import barqsoft.footballscores.DatabaseContract;
 import barqsoft.footballscores.R;
-import barqsoft.footballscores.ScoresProvider;
 import barqsoft.footballscores.Utilies;
 
 /**

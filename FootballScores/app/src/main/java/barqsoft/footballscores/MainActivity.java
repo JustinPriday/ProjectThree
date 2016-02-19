@@ -11,7 +11,7 @@ public class MainActivity extends ActionBarActivity
 {
     public static int selected_match_id;
     public static int current_fragment = 2;
-    public static String LOG_TAG = "MainActivity";
+    private static String LOG_TAG = "MainActivity";
     private final String save_tag = "Save Test";
     private PagerFragment my_main;
     @Override
@@ -68,7 +68,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState)
     {
-        Log.v(save_tag,"will retrive");
+        Log.v(save_tag,"will retrieve");  //spelling error fixed
         Log.v(save_tag,"fragment: "+String.valueOf(savedInstanceState.getInt("Pager_Current")));
         Log.v(save_tag,"selected id: "+savedInstanceState.getInt("Selected_match"));
         current_fragment = savedInstanceState.getInt("Pager_Current");
