@@ -74,7 +74,7 @@ public class scoresAdapter extends CursorAdapter
                     cursor.getInt(COL_LEAGUE)));
             TextView league = (TextView) v.findViewById(R.id.league_textview);
             league.setText(Utilies.getLeague(context, cursor.getInt(COL_LEAGUE)));
-            Button share_button = (Button) v.findViewById(R.id.share_button);
+            final Button share_button = (Button) v.findViewById(R.id.share_button);
             share_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v)
@@ -84,6 +84,7 @@ public class scoresAdapter extends CursorAdapter
                     context.startActivity(createShareForecastIntent(mHolder.home_name.getText()+" "
                             +mHolder.score.getText()+" "+mHolder.away_name.getText() + "\n" + leagueTitle + "\n" + matchDate + "  "
                             + mHolder.date.getText() + "\n"));
+                    share_button.setContentDescription("Share details of match between "+mHolder.home_name.getText()+" and "+mHolder.away_name.getText());
                 }
             });
         }

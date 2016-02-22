@@ -27,6 +27,12 @@
 
     <string name="no_books_message">No Books</string>
 
+    <string name="no_book_title_available_message">No Book Title Available</string>
+    <string name="no_book_subtitle_available_message">No Book Subtitle Available</string>
+    <string name="no_book_description_available_message">No Book Description Available</string>
+    <string name="no_authors_available_message">No Authors Available</string>
+    <string name="no_categories_message">No Categories</string>
+
     <string name="about_text">This application gets book information from a Google API. All titles, cover images, and author information come from there.
         The original version of this app was built by Sascha Jaschke, and a modified version is given to students in the Udacity Android Nanodegree program.\n\n
         This version of the app has been modified by Justin Priday to meet the requirements of Project Three in the Udacity Android Nanodegree Program.</string>

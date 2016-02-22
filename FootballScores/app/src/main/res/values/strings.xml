@@ -67,4 +67,5 @@
     <string name="home_logo_contentdescription">Home Team\'s Icon</string>
     <string name="away_logo_contentdescription">Away Team\'s Icon</string>
     <string name="launch_logo_contentdescription">Application Icon that launches Application when clicked</string>
+    <string name="share_button_default_contentdescripton">Share this match\'s details</string>
 </resources>

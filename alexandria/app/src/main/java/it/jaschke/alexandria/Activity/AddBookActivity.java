@@ -135,23 +135,42 @@ public class AddBookActivity extends AppCompatActivity implements LoaderManager.
             return;
         }
 
-        String bookTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
+        //Although feedback pointed to null catch being required in BookDetail.java, it appears the null
+        //author book example is causing a crash condition here rather than there.
+
+        Context context = getApplicationContext();
+        String bookTitle = context.getResources().getString(R.string.no_book_title_available_message);
+        if (data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE)) != null) {
+            bookTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
+        }
         mBookTitle.setText(bookTitle);
 
-        String bookSubTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE));
+        String bookSubTitle = context.getResources().getString(R.string.no_book_subtitle_available_message);
+        if (data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE)) != null) {
+            bookSubTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE));
+        }
         mBookSubTitle.setText(bookSubTitle);
 
-        String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
-        String[] authorsArr = authors.split(",");
-        mAuthors.setLines(authorsArr.length);
-        mAuthors.setText(authors.replace(",", "\n"));
+        if (data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR)) != null) {
+            String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
+            String[] authorsArr = authors.split(",");
+            mAuthors.setLines(authorsArr.length);
+            mAuthors.setText(authors.replace(",", "\n"));
+        } else {
+            mAuthors.setLines(1);
+            mAuthors.setText(context.getResources().getString(R.string.no_authors_available_message));
+        }
+
         String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
         if(Patterns.WEB_URL.matcher(imgUrl).matches()){
             new DownloadImage(mBookCover).execute(imgUrl);
             mBookCover.setVisibility(View.VISIBLE);
         }
 
-        String categories = data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY));
+        String categories = context.getResources().getString(R.string.no_categories_message);
+        if (data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY)) != null) {
+            categories = data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY));
+        }
         mCategories.setText(categories);
 
         mSaveButton.setVisibility(View.VISIBLE);

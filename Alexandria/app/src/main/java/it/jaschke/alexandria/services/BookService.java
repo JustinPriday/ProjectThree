@@ -163,7 +163,7 @@ public class BookService extends IntentService {
         try {
             if (bookJsonString == null) {
                 //Null bookJsonString erroneously not handled. Return on null now evades crash condition
-                //TODO:Invesitage better UI way of handling no internet connection, user should not get expectation of functionality when it is not available.
+                //TODO:Investigate better UI way of handling no internet connection, user should not get expectation of functionality when it is not available.
                 Log.e(LOG_TAG,"Null JSON Found");
                 return;
             }

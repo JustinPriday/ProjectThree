@@ -1,5 +1,6 @@
 package it.jaschke.alexandria.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -104,32 +105,50 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
             return;
         }
 
+        //Based on review feedback, adding null catch to authors and others to be defensive.
         bookTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
         ((TextView) rootView.findViewById(R.id.fullBookTitle)).setText(bookTitle);
 
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text)+bookTitle);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text) + bookTitle);
         shareActionProvider.setShareIntent(shareIntent);
 
-        String bookSubTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE));
+        Context context = getContext();
+        String bookSubTitle = context.getResources().getString(R.string.no_book_subtitle_available_message);
+        if (data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE)) != null) {
+            bookSubTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE));
+        }
         ((TextView) rootView.findViewById(R.id.fullBookSubTitle)).setText(bookSubTitle);
 
-        String desc = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.DESC));
+
+        String desc = context.getResources().getString(R.string.no_book_description_available_message);
+        if (data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.DESC)) != null) {
+            desc = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.DESC));
+        }
         ((TextView) rootView.findViewById(R.id.fullBookDesc)).setText(desc);
 
-        String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
-        String[] authorsArr = authors.split(",");
-        ((TextView) rootView.findViewById(R.id.authors)).setLines(authorsArr.length);
-        ((TextView) rootView.findViewById(R.id.authors)).setText(authors.replace(",","\n"));
+        if (data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR)) != null) {
+            String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
+            String[] authorsArr = authors.split(",");
+            ((TextView) rootView.findViewById(R.id.authors)).setLines(authorsArr.length);
+            ((TextView) rootView.findViewById(R.id.authors)).setText(authors.replace(",", "\n"));
+        } else {
+            //populate no results
+            ((TextView) rootView.findViewById(R.id.authors)).setLines(1);
+            ((TextView) rootView.findViewById(R.id.authors)).setText(context.getResources().getString(R.string.no_authors_available_message));
+        }
         String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
         if(Patterns.WEB_URL.matcher(imgUrl).matches()){
             new DownloadImage((ImageView) rootView.findViewById(R.id.fullBookCover)).execute(imgUrl);
             rootView.findViewById(R.id.fullBookCover).setVisibility(View.VISIBLE);
         }
 
-        String categories = data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY));
+        String categories = context.getResources().getString(R.string.no_categories_message);
+        if (data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY)) != null) {
+            categories = data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY));
+        }
         ((TextView) rootView.findViewById(R.id.categories)).setText(categories);
 
         if(rootView.findViewById(R.id.right_container)!=null){
